@@ -1,6 +1,7 @@
 package org.kmprtc.sample.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -27,7 +29,6 @@ import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material.icons.rounded.Dns
-import androidx.compose.material.icons.rounded.VideoCall
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -50,7 +51,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -58,6 +58,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kmp_rtc_sample.composeapp.generated.resources.Res
+import kmp_rtc_sample.composeapp.generated.resources.logo
+import org.jetbrains.compose.resources.painterResource
 import org.kmprtc.sample.API_BASE_URL
 import org.kmprtc.sample.AppViewModel
 import org.kmprtc.sample.UiState
@@ -86,16 +89,12 @@ fun AuthScreen(state: UiState, vm: AppViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(Modifier.height(32.dp))
-            Box(
-                Modifier.size(80.dp).clip(CircleShape).background(
-                    Brush.linearGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary))
-                ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(Icons.Rounded.VideoCall, null, tint = Color.White, modifier = Modifier.size(42.dp))
-            }
-            Spacer(Modifier.height(20.dp))
-            Text("KMP RTC", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+            Image(
+                painterResource(Res.drawable.logo),
+                contentDescription = "KMP RTC",
+                modifier = Modifier.size(150.dp).clip(RoundedCornerShape(32.dp)),
+            )
+            Spacer(Modifier.height(16.dp))
             Text(
                 "Appels audio, video et conferences\nsur votre propre serveur",
                 style = MaterialTheme.typography.bodyMedium,
