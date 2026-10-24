@@ -42,4 +42,4 @@ Desktop (interface seule, sans son) : `./gradlew :composeApp:run`
 | `androidMain/.../PjsipCallEngine.kt` | Moteur Android (PJSIP) : audio, vidéo, DTMF |
 | `ui/screens/` | Écrans Material 3 : connexion, accueil, appel |
 
-Guide pas à pas : `http://<serveur>/docs/09-integration-kmp.html`.
+Guide pas à pas : `http://<serveur>/docs/#/09-integration-kmp`.
