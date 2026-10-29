@@ -1,7 +1,8 @@
 package org.kmprtc.sample.call
 
-import android.view.SurfaceHolder
-import android.view.SurfaceView
+import android.graphics.SurfaceTexture
+import android.view.Surface
+import android.view.TextureView
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
@@ -16,19 +17,30 @@ actual fun RemoteVideo(modifier: Modifier) = VideoSurface(modifier, onTop = fals
 @Composable
 actual fun LocalPreview(modifier: Modifier) = VideoSurface(modifier, onTop = true, engine::attachPreview)
 
-/** Une SurfaceView Android dont la surface est donnee a PJSIP pour y dessiner la video. */
+/**
+ * Une TextureView dont la surface est donnee a PJSIP pour y dessiner la video.
+ * Pas de SurfaceView : elle s'affiche derriere la fenetre et le fond de l'ecran d'appel la cachait.
+ */
 @Composable
-private fun VideoSurface(modifier: Modifier, onTop: Boolean, attach: (android.view.Surface?) -> Unit) {
+private fun VideoSurface(modifier: Modifier, @Suppress("UNUSED_PARAMETER") onTop: Boolean, attach: (Surface?) -> Unit) {
     AndroidView(
         modifier = modifier,
         factory = { ctx ->
-            SurfaceView(ctx).apply {
-                setZOrderMediaOverlay(onTop)
-                holder.addCallback(object : SurfaceHolder.Callback {
-                    override fun surfaceCreated(h: SurfaceHolder) = Unit
-                    override fun surfaceChanged(h: SurfaceHolder, format: Int, w: Int, height: Int) = attach(h.surface)
-                    override fun surfaceDestroyed(h: SurfaceHolder) = attach(null)
-                })
+            TextureView(ctx).apply {
+                surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+                    private var surface: Surface? = null
+                    override fun onSurfaceTextureAvailable(st: SurfaceTexture, w: Int, h: Int) {
+                        surface = Surface(st).also(attach)
+                    }
+                    override fun onSurfaceTextureSizeChanged(st: SurfaceTexture, w: Int, h: Int) = Unit
+                    override fun onSurfaceTextureUpdated(st: SurfaceTexture) = Unit
+                    override fun onSurfaceTextureDestroyed(st: SurfaceTexture): Boolean {
+                        attach(null)
+                        surface?.release()
+                        surface = null
+                        return true
+                    }
+                }
             }
         },
     )
